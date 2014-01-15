@@ -7,8 +7,8 @@ RUN apt-get install -y --no-install-recommends \
   python nodejs default-jre-headless clang llvm
 
 RUN git clone --depth=1 https://github.com/kripken/emscripten /opt/emscripten
-
-ENV PATH /opt/emscripten:/usr/local/bin:/usr/bin:/bin
+RUN for prog in em++ em-config emar emcc emconfigure emmake emranlib emrun emscons; do \
+  ln -sf /opt/emscripten/$prog /usr/local/bin; done
 
 # build an example code in order to cache the standard libraries and relooper
 RUN emcc -V && \
