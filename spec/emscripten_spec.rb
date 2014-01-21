@@ -11,6 +11,11 @@ describe "Clang toolchain" do
       it { should return_exit_status 0 }
       its(:stdout) { should match /clang version 3\.2/ }
     end
+
+    describe command("which #{cmd}") do
+      it { should return_exit_status 0 }
+      its(:stdout) { should eq "/usr/bin/#{cmd}" }
+    end
   end
 end
 
