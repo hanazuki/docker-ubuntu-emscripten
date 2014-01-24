@@ -14,7 +14,7 @@ describe "Clang toolchain" do
 
     describe command("which #{cmd}") do
       it { should return_exit_status 0 }
-      its(:stdout) { should eq "/usr/bin/#{cmd}" }
+      its(:stdout) { should eq "/usr/bin/#{cmd}\n" }
     end
   end
 end
@@ -24,6 +24,11 @@ describe "LLVM toolchain" do
     describe file("/usr/bin/#{cmd}") do
       it { should be_file }
       it { should be_executable }
+    end
+
+    describe command("which #{cmd}") do
+      it { should return_exit_status 0 }
+      its(:stdout) { should eq "/usr/bin/#{cmd}\n" }
     end
   end
 end
@@ -38,6 +43,11 @@ describe "Pyhton interpreter" do
     it { should return_exit_status 0 }
     its(:stdout) { should match /^Python 2\.7\./ }
   end
+
+  describe command("which python2") do
+    it { should return_exit_status 0 }
+    its(:stdout) { should eq "/usr/bin/python2\n" }
+  end
 end
 
 describe "node.js" do
@@ -49,6 +59,11 @@ describe "node.js" do
   describe command("/usr/bin/nodejs --version") do
     it { should return_exit_status 0 }
     its(:stdout) { should match /^v0\.10\./ }
+  end
+
+  describe command("which nodejs") do
+    it { should return_exit_status 0 }
+    its(:stdout) { should eq "/usr/bin/nodejs\n" }
   end
 end
 
@@ -64,6 +79,11 @@ describe "emscripten toolchain" do
 
     describe file("/usr/local/bin/#{cmd}") do
       it { should be_linked_to "/opt/emscripten/#{cmd}" }
+    end
+
+    describe command("which #{cmd}") do
+      it { should return_exit_status 0 }
+      its(:stdout) { should eq "/usr/local/bin/#{cmd}\n" }
     end
   end
 
@@ -97,13 +117,5 @@ describe "emscripten library cache" do
 
   describe file("/.emscripten_cache/relooper.js") do
     it { should be_file }
-  end
-end
-
-describe "PATH to executables" do
-  %w{emcc em++ emmake emconfigure python2 nodejs clang clang++ java make}.each do |cmd|
-    describe command("which #{cmd}") do
-      it { should return_exit_status 0 }
-    end
   end
 end
